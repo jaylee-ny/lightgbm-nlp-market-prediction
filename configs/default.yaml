@@ -1,0 +1,56 @@
+# Default configuration for the trading system
+
+data:
+  data_dir: "data/raw"
+  cache_dir: "data/processed"
+  train_start_date: "2023-01-01"
+  train_end_date: "2023-12-31"
+  test_start_date: "2024-01-01"
+  test_end_date: "2024-12-31"
+  min_trading_days: 100
+
+features:
+  lag_windows: [3, 7, 14, 30]
+  lag_features:
+    - returnsClosePrevRaw1
+    - returnsOpenPrevRaw1
+    - returnsClosePrevMktres1
+    - returnsOpenPrevMktres1
+  use_news: true
+  news_decay_half_life: 24.0
+  news_min_articles: 1
+
+model:
+  model_type: "lgbm"
+  learning_rate: 0.1
+  num_leaves: 100
+  min_data_in_leaf: 100
+  num_iterations: 300
+  max_bin: 255
+  feature_fraction: 0.8
+  bagging_fraction: 0.8
+  bagging_freq: 5
+  early_stopping_rounds: 50
+  validation_fraction: 0.2
+  random_state: 42
+
+optimization:
+  enabled: false
+  n_trials: 100
+  cv_folds: 3
+  optimization_metric: "log_loss"
+  direction: "minimize"
+  n_jobs: 1
+
+backtest:
+  train_window_years: 1.0
+  test_window_months: 3
+  commission_bps: 1.0
+  spread_bps: 5.0
+  market_impact_coef: 0.1
+  risk_free_rate: 0.02
+  periods_per_year: 252
+
+output_dir: "outputs"
+log_level: "INFO"
+seed: 42
