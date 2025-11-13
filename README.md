@@ -11,6 +11,36 @@ A machine learning pipeline for developing and backtesting trading strategies us
 - **Transaction Costs**: Realistic cost modeling with commission, spread, and market impact
 - **Configuration Management**: Type-safe configs with validation
 
+## Problem Statement
+
+### Objective
+Predict 10-day forward market-residualized returns (`returnsOpenNextMktres10`) using:
+- Market OHLCV data (prices, volume, historical returns)
+- News sentiment features (pre-computed probabilities)
+- News metadata (novelty, relevance, timing)
+
+### Target Variable
+`returnsOpenNextMktres10` = 10-day return with **market component removed**
+
+**Implication**: We're predicting **alpha** (excess returns relative to market), not total returns.
+
+### Evaluation Metric
+Competition uses **Sharpe ratio** of daily portfolio returns:
+
+```
+score = mean(daily_returns) / std(daily_returns)
+
+where daily_return_t = Σ_i (prediction_i × actual_return_i × universe_i)
+```
+
+### Challenges
+- **Low signal-to-noise ratio**: ~5% of variance explained by features
+- **Non-stationarity**: Market regimes shift (2020 COVID, 2022 rate hikes)
+- **Sparse news coverage**: ~30% of asset-days have zero news articles
+- **Survivorship bias**: Delisted assets not in dataset
+
+---
+
 ## Installation
 ```bash
 # Clone repository
